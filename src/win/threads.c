@@ -40,7 +40,7 @@ static NOINLINE void uv__once_inner(uv_once_t* guard,
   HANDLE* event_ptr;
 
   /* Fetch and align event_ptr */
-  event_ptr = (HANDLE*) ((uintptr_t) &guard->event + (sizeof(HANDLE) - 1) &
+  event_ptr = (HANDLE*) (((uintptr_t) &guard->event + (sizeof(HANDLE) - 1)) &
     ~(sizeof(HANDLE) - 1));
 
   created_event = CreateEvent(NULL, 1, 0, NULL);
