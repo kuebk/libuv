@@ -244,6 +244,10 @@ int uv_spawn(uv_loop_t* loop, uv_process_t* process,
 
   process->pid = pid;
 
+  if (options.affinity_size) {
+    uv_set_affinity(pid, options.affinity, options.affinity_size);
+  }
+
   ev_child_init(&process->child_watcher, uv__chld, pid, 0);
   ev_child_start(process->loop->ev, &process->child_watcher);
   process->child_watcher.data = process;

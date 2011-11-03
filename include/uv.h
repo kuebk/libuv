@@ -946,7 +946,14 @@ typedef struct uv_process_options_s {
    * in. Stands for current working directory.
    */
   char* cwd;
-
+  /*
+   * Array of cores to run the process on
+   */
+  char* affinity;
+  /*
+   * Sizeof affinity
+   */
+  int affinity_size;
   /*
    * TODO describe how this works.
    */
