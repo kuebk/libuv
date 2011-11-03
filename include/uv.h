@@ -982,6 +982,15 @@ UV_EXTERN int uv_spawn(uv_loop_t*, uv_process_t*,
  */
 UV_EXTERN int uv_process_kill(uv_process_t*, int signum);
 
+/*
+ * Sets the cpu affinity on the given process pid
+ */
+UV_EXTERN int uv_set_affinity(int pid, char *core, int core_size);
+
+/*
+ * Gets the cpu affinity of the given process pid
+ */
+UV_EXTERN int uv_get_affinity(int pid, char **core, int *core_size);
 
 /*
  * uv_work_t is a subclass of uv_req_t

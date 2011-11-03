@@ -29,6 +29,8 @@
 #include <poll.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sched.h>
 
 #ifdef __APPLE__
 # include <crt_externs.h>
@@ -299,4 +301,39 @@ int uv_process_kill(uv_process_t* process, int signum) {
   } else {
     return 0;
   }
+}
+
+int uv_set_affinity(int pid, char *core, int core_size) {
+    cpu_set_t mask;
+    int i;
+
+    CPU_ZERO(&mask);
+
+    for (i = 0; i < core_size; i++) {
+        CPU_SET(core[i], &mask);
+    }
+
+    return sched_setaffinity((pid_t) pid, sizeof(cpu_set_t), &mask);
+}
+
+int uv_get_affinity(int pid, char **core, int *core_size) {
+    cpu_set_t mask;
+    int size = sizeof(cpu_set_t) / sizeof(__cpu_mask);
+    int result, i;
+    *core_size = 0;
+
+    *core = malloc(sizeof(char) * size);
+
+    CPU_ZERO(&mask);
+
+    result = sched_getaffinity((pid_t) pid, sizeof(cpu_set_t), &mask);
+
+    for (i = 0; i < size; i++) {
+        if (CPU_ISSET(i, &mask)) {
+            (*core)[*core_size] = i;
+            *core_size += 1;
+        }
+    }
+
+    return result;
 }
